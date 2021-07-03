@@ -74,6 +74,12 @@ Private Sub say_helloworld_Click()
         
     Next i
     
+    x = Range("B1").Cells(1, 1).Value
+    
+    For i = 1 To x
+        Cells.Rows(i).EntireRow.Hidden = False
+    Next i
+    
     'MsgBox x
 End Sub
 
