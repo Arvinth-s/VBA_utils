@@ -62,19 +62,19 @@ Private Sub say_helloworld_Click()
     For i = 1 To n
 
 
-            If (Application.WorksheetFunction.CountIf(DataRange.Columns(i), DataRange.Cells(2, i))) = m - 1 Then
+            If (Application.WorksheetFunction.CountIf(DataRange.Columns(i), DataRange.Cells(2, i))) = m - 1 And m > 1 Then
                 DataRange.Columns(i).Hidden = True
-                x = Range("B1").Value
+                x = Range("B2").Value
                 Range("B" & x).Value = DataRange.Cells(2, i).Value
                 Range("A" & x).Value = DataRange.Cells(1, i).Value
-                Range("B1").Cells(1, 1).Value = x + 1
+                Range("B2").Cells(1, 1).Value = x + 1
                 
             End If
             
         
     Next i
     
-    x = Range("B1").Cells(1, 1).Value
+    x = Range("B2").Cells(1, 1).Value
     
     For i = 1 To x
         Cells.Rows(i).EntireRow.Hidden = False
@@ -84,10 +84,14 @@ Private Sub say_helloworld_Click()
 End Sub
 
 Private Sub sheet_reset_Click()
+    Dim x As Integer
+    x = Range("B1").Cells(1, 1).Value
     Range("A:B").Value = ""
     Range("1:2").Value = ""
-    Range("A1").Value = "Count"
-    Range("B1").Value = 10
+    Range("A1").Value = "Starts From"
+    Range("B1").Value = x
+    Range("A2").Value = "Count"
+    Range("B2").Value = x + 1
     Cells.Columns.EntireColumn.Hidden = False
     Cells.Rows.EntireRow.Hidden = False
 End Sub
