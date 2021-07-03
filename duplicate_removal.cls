@@ -7,6 +7,57 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
+Private Sub remove_continous_value_Click()
+    Dim DataRange As Range
+    
+    Dim m As Integer
+    Dim n As Integer
+    Dim x As Double
+    
+    Set DataRange = Selection
+    m = DataRange.Rows.count
+    n = DataRange.Columns.count
+    x = 0
+    
+    For j = 1 To n
+        If VarType(DataRange.Cells(2, j)) = vbDate Or VarType(DataRange.Cells(2, j)) = vbInteger _
+        Or VarType(DataRange.Cells(2, j)) = vbLong Or VarType(DataRange.Cells(2, j)) = vbCurrency _
+        Or VarType(DataRange.Cells(2, j)) = vbLongLong Or VarType(DataRange.Cells(2, j)) = vbDouble _
+        And DataRange.Cells(2, j).EntireColumn.Hidden = False Then
+
+        
+        
+            
+            x = 0
+            For i = 2 To m - 1
+                If Not DataRange.Cells(i, j) + 1 = DataRange.Cells(i + 1, j) Then
+                    x = 1
+                End If
+            Next i
+            
+            If x = 0 Then
+                x = Range("B2").Value
+                Range("B" & x).Value = DataRange.Cells(2, j).Value
+                Range("A" & x).Value = DataRange.Cells(1, j).Value
+                Range("A" & x).Interior.ColorIndex = 20
+                Range("B2").Cells(1, 1).Value = x + 1
+                DataRange.Columns(j).EntireColumn.Hidden = True
+            End If
+        End If
+    Next j
+    
+    
+    x = Range("B1").Cells(1, 1).Value
+    
+    For i = 1 To x
+        Cells.Rows(i).EntireRow.Hidden = False
+    Next i
+            
+            
+            
+    
+End Sub
+
 Private Sub hide_duplicate_rows_Click()
     Dim DataRange As Range
     
@@ -62,7 +113,9 @@ Private Sub say_helloworld_Click()
     For i = 1 To n
 
 
-            If (Application.WorksheetFunction.CountIf(DataRange.Columns(i), DataRange.Cells(2, i))) = m - 1 And m > 1 Then
+            If (Application.WorksheetFunction.CountIf(DataRange.Columns(i), DataRange.Cells(2, i))) = m - 1 _
+            And m > 1 _
+            And DataRange.Cells(2, i).EntireColumn.Hidden = False Then
                 DataRange.Columns(i).Hidden = True
                 x = Range("B2").Value
                 Range("B" & x).Value = DataRange.Cells(2, i).Value
@@ -94,4 +147,8 @@ Private Sub sheet_reset_Click()
     Range("B2").Value = x + 1
     Cells.Columns.EntireColumn.Hidden = False
     Cells.Rows.EntireRow.Hidden = False
+    Cells.Interior.ColorIndex = xlColorIndexNone
+    ActiveWindow.DisplayGridlines = True
+    ActiveWindow.DisplayGridlines = True
+    ActiveWindow.GridlineColor = RGB(0, 0, 0)
 End Sub
