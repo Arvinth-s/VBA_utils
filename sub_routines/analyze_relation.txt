@@ -1,0 +1,98 @@
+Private Sub analyze_relation_Click()
+    Dim DataRange As Range, WholeRange As Range
+    Set WholeRange = Range(Range("C3").End(xlToRight), Range("C3").End(xlDown))
+    Set DataRange = Selection
+    Dim recent() As Integer, rare() As Integer, score() As Integer, atrtitle() As Variant, m As Integer, n As Integer
+    'WholeRange.Select
+    MsgBox ("Selected Whole Range")
+    m = WholeRange.Rows.count
+    n = WholeRange.Columns.count
+    
+    ReDim recent(n)
+    ReDim rare(n)
+    ReDim atrtitle(n)
+    ReDim score(n)
+    
+    Dim ibegin As Double, iend As Double, x As Integer, rareBias As Integer, recentBias As Integer
+    ibegin = 1
+    iend = 1
+    
+    
+    For i = 2 To m - 1
+        If Not DataRange.Cells(i, 1) = DataRange.Cells(i + 1, 1) Then
+            x = MsgBox("Want to analyze for this change? ", vbOKCancel, "Analyze")
+            
+            If x = 1 Then
+                iend = i
+                Exit For
+            Else
+                istart = i
+                iend = i
+            End If
+        End If
+    Next i
+    
+    
+    For i = 1 To n
+        recent(i) = 0
+        rare(i) = 0
+    Next i
+    
+    
+    For i = ibegin To iend - 1
+        For j = 1 To n
+            If Not WholeRange.Cells(i, j) = WholeRange.Cells(i + 1, j) Then
+                recent(j) = iend - i
+                rare(j) = rare(j) + 1
+            End If
+        Next j
+    Next i
+    
+    
+    
+    rareBias = 1
+    recentBias = 1
+    
+    For i = 1 To n
+        atrtitle(i) = WholeRange.Cells(1, i).Value
+        score(i) = (rare(i) + rareBias) * (recent(i) + recentBias) * (recent(i) + recentBias)
+    Next i
+    
+    Dim temp As Variant
+    
+    
+    For i = 1 To n
+        For j = 1 To n - 1
+            If score(j) > score(j + 1) Then
+                temp = score(j + 1)
+                score(j + 1) = score(j)
+                score(j) = temp
+                
+                temp = atrtitle(j + 1)
+                atrtitle(j + 1) = atrtitle(j)
+                atrtitle(j) = temp
+                
+                temp = rare(j + 1)
+                rare(j + 1) = rare(j)
+                rare(j) = temp
+                
+                
+                temp = recent(j + 1)
+                recent(j + 1) = recent(j)
+                recent(j) = temp
+                
+                
+            End If
+        Next j
+    Next i
+    
+    For i = 1 To n
+        x = 3 + i
+        Cells(2, x).Value = rare(i) & " " & recent(i) & " " & score(i)
+        Cells(1, x).Value = atrtitle(i)
+    Next i
+    
+    
+    
+    
+End Sub
