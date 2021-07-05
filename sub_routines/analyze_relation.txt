@@ -86,13 +86,20 @@ Private Sub analyze_relation_Click()
         Next j
     Next i
     
+    Dim y As Integer
+    y = 3
+    
     For i = 1 To n
-        x = 3 + i
-        Cells(2, x).Value = rare(i) & " " & recent(i) & " " & score(i)
-        Cells(1, x).Value = atrtitle(i)
+        If rare(i) > 1 Then
+            y = y + 1
+            While Cells.Columns(y).Hidden
+                y = y + 1
+            Wend
+            Cells(2, y).Value = rare(i) & " " & recent(i) & " " & score(i)
+            Cells(1, y).Value = atrtitle(i)
+        End If
     Next i
     
     
     
     
-End Sub
